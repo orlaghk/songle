@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My App{% endblock %}</title>
+    <link href="{{url_for('static',filename='css/main.css')}}" rel="stylesheet">
+</head>
+    <!-- Add your CSS styles or external stylesheets here -->
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+    }
+    header {
+        color: white;
+        padding: 10px;
+        display: flex;
+        justify-content:space-between;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    header a {
+        color: white;
+        text-decoration: none;
+        margin: 0 10px;
+    }
+    .search-container {
+        display: flex;
+        height: 100vh;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding:  20px 20px;
+        width: 100%;
+        box-sizing: border-box;
+        align-items: center; /* Center vertically */
+    }
+
+    .search-results-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px; 
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .result-box {
+        border-bottom: 1px solid #ccc; 
+        padding: 5px;
+        display: flex;
+    }
+    .result {
+        display: flex;
+        flex-grow: 1;
+    }
+
+    .result img {
+        width: 100px; /* Adjust as needed */
+        height: 100px; /* Adjust as needed */
+        margin-right: 20px;
+    }
+
+    .result-details {
+        flex-grow: 1;
+        margin-top: 2vh;
+        margin-bottom: 2vh;
+    }
+
+    .save-button img {
+        width: 20px; 
+        height: 20px;
+        margin-top: 2vh;
+        margin-left: 20px;
+    }
+
+    .upload-button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .upload-button:hover {
+        background-color: #45a049;
+    }
+
+    .button {
+        display: inline-block;
+        background-color: #cfeaef;
+        color:#443ad4;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width:15vw;
+        text-align: center;
+    }
+
+    .button:hover {
+        background-color: #a5b3ba;
+        transform: scale(1.1); /* Make the button slightly bigger on hover */
+    }
+
+    
+    
+    .remove-button,
+    .add-button {
+        background-color: transparent;
+        color: grey;
+        border: none;
+        cursor: pointer;
+        text-decoration: underline;
+        transition: color 0.3s;
+        font-size: 12px;
+    }
+
+    .remove-button:hover,
+    .add-button:hover {
+        color: #222326; /* Darker grey on hover */
+    }
+
+
+    .page-button {
+        background-color: transparent;
+        color: grey;
+        border: none;
+        cursor: pointer;
+        text-decoration: underline;
+        transition: color 0.3s;
+        font-size: 16px;
+    }
+
+
+    .page-button:hover {
+        color: #222326; /* Darker grey on hover */
+    }
+
+
+    .liked-heading {
+        font-size: 27px;
+        font-weight: 500;
+        border-bottom: 1px solid #393535;
+        margin-top: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center; /* Center align the items */
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between; /* Distribute items evenly */
+        align-items: center; /* Center align vertically */
+        width: 100%; /* Ensure the row spans the full width */
+    }
+
+    .col {
+        flex-grow: 1; /* Allow columns to grow and take up equal space */
+        margin: 0 5px; /* Add some spacing between elements */
+        text-align: center; /* Center align the text */
+    }
+
+    .rounded-i {
+    border-radius: 8px;
+    background-color: #9cc0dd; /* Adjust the value as needed for desired rounding */
+    }
+
+    .info{
+        margin-left: 4px;
+        margin-bottom: 4px;
+        margin-top: 4px;
+    }
+
+    .dropdown {
+    position: relative;
+    margin-bottom: 20;
+    }
+
+    .suggestion {
+        cursor: pointer;
+        padding: 1px 1px;
+        border-bottom: 1px solid #ffffff99;
+    }
+
+    .suggestion:hover {
+        background-color: #aca6a699;
+    }
+
+
+    
+
+</style>
+<body class="flex h-screen bg-sky-100">
+    <header style="display: flex; justify-content: space-between; align-items: center;" class="bg-indigo-700">
+        {% if username %}
+            <div style="display: flex; align-items: center;">
+                <div style="margin-right: 10px;">
+                    <a href="{{ url_for('profile') }}" class="button">Profile</a>
+                </div>
+                <div>
+                    <form method="post" action="{{ url_for('logout') }}" style="display: inline-block;">
+                        <button type="submit" style="border: none; cursor: pointer; margin-top: 10px;">
+                            <img width="35" height="35" src="https://img.icons8.com/ios-glyphs/30/FFFFFF/exit.png" alt="exit"/>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div>
+                <a href="{{ url_for('index') }}" class="button">
+                    <img src="../static/img/logo.png" width="20" height="20" style="display: inline-block; vertical-align: middle;  margin-bottom: 3px;">
+                    <strong>Songle</strong>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 50 50" style="display: inline-block; vertical-align: middle;  margin-bottom: 3px; fill: currentColor;">
+                        <path d="M 21 3 C 11.6 3 4 10.6 4 20 C 4 29.4 11.6 37 21 37 C 24.354553 37 27.47104 36.01984 30.103516 34.347656 L 42.378906 46.621094 L 46.621094 42.378906 L 34.523438 30.279297 C 36.695733 27.423994 38 23.870646 38 20 C 38 10.6 30.4 3 21 3 z M 21 7 C 28.2 7 34 12.8 34 20 C 34 27.2 28.2 33 21 33 C 13.8 33 8 27.2 8 20 C 8 12.8 13.8 7 21 7 z"></path>
+                    </svg>
+                </a>
+            </div>
+            <div>
+                <a href="{{ url_for('mp3recommend')}}" class="button">MP3 Recommendation</a>
+            </div>
+            <div>
+                <a href="{{ url_for('userguide')}}" class="button">User Guide</a>
+            </div>
+            
+        {% else %}
+            <div>
+                <a href="{{ url_for('login') }}" class="button">Log In</a>
+            </div>
+            <div>
+                <a href="{{ url_for('index') }}" class="button">
+                    <img src="../static/img/logo.png" width="20" height="20" style="display: inline-block; vertical-align: middle;  margin-bottom: 3px;">
+                    <strong>Songle</strong>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 50 50" style="display: inline-block; vertical-align: middle;  margin-bottom: 3px;  fill: currentColor;">
+                        <path d="M 21 3 C 11.6 3 4 10.6 4 20 C 4 29.4 11.6 37 21 37 C 24.354553 37 27.47104 36.01984 30.103516 34.347656 L 42.378906 46.621094 L 46.621094 42.378906 L 34.523438 30.279297 C 36.695733 27.423994 38 23.870646 38 20 C 38 10.6 30.4 3 21 3 z M 21 7 C 28.2 7 34 12.8 34 20 C 34 27.2 28.2 33 21 33 C 13.8 33 8 27.2 8 20 C 8 12.8 13.8 7 21 7 z"></path>
+                    </svg>
+                </a>
+            </div>
+            <div>
+                <a href="{{ url_for('mp3recommend')}}" class="button">MP3 Recommendation</a>
+            </div>
+            <div>
+                <a href="{{ url_for('userguide')}}" class="button">User Guide</a>
+            </div>
+        {% endif %}
+        
+    </header>
+    
+
+    <div class="container">
+        
+        {% block content %}{% endblock %}
+        
+    </div>
+</body>
+</html>
+
